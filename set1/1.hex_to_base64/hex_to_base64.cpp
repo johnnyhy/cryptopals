@@ -9,8 +9,6 @@ char hex_to_bin(char hex) {
     char mod_0_to_9 = 48; // mod by 48 to turn '0'-'9' into 0-9
 
     char dec = (hex % mod_a_to_f) % mod_0_to_9; // filer out a-f, then 0-9
-    cout << hex << ": " << int(dec) << endl;
-
     return dec;
 }
 
@@ -30,12 +28,37 @@ string hex_to_base64(string hex_string) {
     }
 
     // ensure enough bits to construct whole base64 digits
-    if (bytes.size() % 3 == 1) {
+    while (bytes.size() % 3 != 0) {
         bytes.push_back(0);
     }
+
+    string base64_index = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    string base64_encoded;
+
+    for (size_t i = 0; i < bytes.size(); i += 3) {
+        char b1 = (bytes[i] >> 2) & 0x3f;
+        char b2 = ((bytes[i] << 4) + (bytes[i + 1] >> 4)) & 0x3f;
+        char b3 = ((bytes[i + 1] << 2) + (bytes[i + 2] >> 6)) & 0x3f;
+        char b4 = bytes[i + 2] & 0x3f;
+        base64_encoded.push_back(base64_index[b1]);
+        base64_encoded.push_back(base64_index[b2]);
+        base64_encoded.push_back(base64_index[b3]);
+        base64_encoded.push_back(base64_index[b4]);
+    }
+
+    return base64_encoded;
 }
 
 int main() {
-    hex_to_base64(string("0123456789abcdef"));
+    string input = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d";
+    string output = hex_to_base64(input);
+
+    if (output == "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t") {
+        cout << "yeet" << endl;
+    }
+    else {
+        cout << "oof" << endl;
+    }
+
     return 0;
 }
