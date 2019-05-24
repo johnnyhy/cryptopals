@@ -4,31 +4,29 @@
 
 using namespace std;
 
-char hex_to_dec(char val) {
-    char mod_0_9 = 48;
-    char mod_a_to_f = 49;
+char hex_to_dec(char hex) {
+    char mod_a_to_f = 87; // mod by 87 to turn 'a'-'f' into 10-15
+    char mod_0_to_9 = 48; // mod by 48 to turn '0'-'9' into 0-9
 
-    cout << string(1, val) << ": " << int((val % mod_0_9) % mod_a_to_f) << endl;
+    char dec = (hex % mod_a_to_f) % mod_0_to_9; // filer out a-f, then 0-9
+    cout << hex << ": " << int(dec) << endl;
 
-    return (val % mod_0_9) % mod_a_to_f;
+    return dec;
 }
 
 string hex_to_base64(string hex_string) {
     vector<char> bytes;
 
-    for (auto digit = hex_string.begin(); digit < hex_string.end();  digit++) {
-        char val1 = *digit++;
-        char val2 = (digit == hex_string.end()) ? 0 : *digit;
+    for (size_t i = 0; i < hex_string.size(); i += 2) {
+        char hex1 = hex_string[i];
+        char hex2 = (i + 1 == hex_string.size()) ? 0 : hex_string[i + 1];
 
-        char byte_val = hex_to_dec(val1) << 4 + hex_to_dec(val2);
-        bytes.push_back(byte_val);
-
-        if (digit == hex_string.end()) {
-            break;
-        }
+        hex_to_dec(hex1);
+        hex_to_dec(hex2);
     }
 }
 
 int main() {
-    hex_to_base64("");
+    hex_to_base64(string("0123456789abcdef0"));
+    return 0;
 }
