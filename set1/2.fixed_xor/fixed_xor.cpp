@@ -33,7 +33,6 @@ string fixed_xor(string plaintext, string key) {
     size_t length = plaintext.size();
 
     string ciphertext; // cycle through char pairs and generate hex xor
-    char window;
     for (size_t i = 0; i < length; i++) {
         char hex_xor = xor_hex_chars(plaintext[i], key[i]);
         ciphertext.push_back(hex_xor);
